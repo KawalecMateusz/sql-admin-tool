@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx"
+	xmlns:fx="http://javafx.com/fxml"
+	fx:controller="S1.MainController">
+	
+	<Label text="SQL Editor"/>
+	
+	<TextArea fx:id="sqlArea" prefHeight="150"/>
+	
+	<Button text="Execute" onAction="#onExecute"/>
+	
+	<Label text="results"/>
+	
+	<TableView fx:id="tableView" prefHeight="300"/>
+	
+</VBox>
