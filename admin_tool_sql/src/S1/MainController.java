@@ -3,6 +3,7 @@ package S1;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.collections.ObservableList;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,7 +16,7 @@ public class MainController {
 	private TextArea sqlArea;
 	
 	@FXML
-	private TableView<?> tableView;
+	private TableView<ObservableList<String>> tableView;
 	
 	private final DBConnection db = new DBConnection();
 	private final QueryExecutor executor = new QueryExecutor();
@@ -33,10 +34,7 @@ public class MainController {
 	        var conn = db.getConnection();
 	        var stmt = conn.createStatement();
 	        var rs = stmt.executeQuery(sql);
-
-	        while (rs.next()) {
-	            System.out.println(rs.getObject(1));
-	        }
+	        TableBuilder.show(tableView, rs);
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
