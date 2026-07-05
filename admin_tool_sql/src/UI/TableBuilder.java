@@ -1,4 +1,4 @@
-package S1;
+package UI;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

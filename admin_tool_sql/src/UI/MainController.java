@@ -1,4 +1,4 @@
-package S1;
+package UI;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
@@ -8,6 +8,9 @@ import javafx.collections.ObservableList;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import Database.DBConnection;
+import Database.QueryExecutor;
 
 
 public class MainController {
