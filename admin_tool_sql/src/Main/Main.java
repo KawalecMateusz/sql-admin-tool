@@ -21,3 +21,17 @@ public class Main extends Application {
 		launch(args);
 	}
 }
+
+
+/*
+ * 127.0.0.1
+ * testdb
+ * postgres
+ * password
+ * 
+ * testdb2
+ * books
+ * 
+ * testdb3
+ * departments
+ */

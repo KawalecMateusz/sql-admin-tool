@@ -8,17 +8,14 @@ public class DBConnection {
 	
 	private Connection connection;
 	
-	public void connect() {
+	public Connection connect(String host, String db, String user, String pass) {
 		try {
-			connection = DriverManager.getConnection(
-							"jdbc:postgresql://localhost:5432/testdb",
-							"postgres",
-							"password");
-			
-			System.out.println("COnnection to DB");
+			String url="jdbc:postgresql://"+host+":5432/"+db;
+			connection = DriverManager.getConnection(url, user, pass);
+			return connection;
 		}
-		catch (SQLException e) {
-			e.printStackTrace();
+		catch(Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 	
