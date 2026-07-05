@@ -8,9 +8,9 @@ public class DBConnection {
 	
 	private Connection connection;
 	
-	public Connection connect(String host, String db, String user, String pass) {
+	public Connection connect(String host, int port, String db, String user, String pass) {
 		try {
-			String url="jdbc:postgresql://"+host+":5432/"+db;
+			String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
 			connection = DriverManager.getConnection(url, user, pass);
 			return connection;
 		}

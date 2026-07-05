@@ -1,5 +1,7 @@
 package UI;
 
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableView;
@@ -18,6 +20,8 @@ import java.sql.SQLException;
 import Database.DBConnection;
 import Database.QueryExecutor;
 import Database.ConnectionManager;
+import Database.ConnectionConfig;
+import Database.ConnectionStorage;
 
 public class MainController {
 
@@ -28,7 +32,7 @@ public class MainController {
 	private TableView<ObservableList<String>> tableView;
 	
 	@FXML
-	private ListView<ConnectionManager.DBSession> connectionList;
+	private ListView<ConnectionConfig> connectionList;
 	
 	@FXML
 	private Label statusLabel;	
@@ -40,6 +44,9 @@ public class MainController {
 	@FXML
 	public void initialize() {
 
+	    List<ConnectionConfig> loaded = ConnectionStorage.load();
+	    manager.setSessions(loaded);
+
 	    connectionList.setOnMouseClicked(e -> {
 	        var selected = connectionList.getSelectionModel().getSelectedItem();
 	        if (selected != null) {
@@ -47,6 +54,9 @@ public class MainController {
 	            updateStatus();
 	        }
 	    });
+
+	    updateList();
+	    updateStatus();
 	}
 	
 	@FXML
@@ -54,12 +64,12 @@ public class MainController {
 	    String sql = sqlArea.getText();
 
 	    try {
-	        ConnectionManager.DBSession session = manager.getActive();
+	        ConnectionConfig session = manager.getActive();
 	        
-	        if(session == null || session.connection == null) {
+	        if(session == null || session.getConnection() == null) {
 	        	throw new RuntimeException("No active ceonnection");
 	        }
-	        var conn = session.connection;
+	        var conn = session.getConnection();
 	        var stmt = conn.createStatement();
 	        var rs = stmt.executeQuery(sql);
 	        TableBuilder.show(tableView, rs);
@@ -71,56 +81,116 @@ public class MainController {
 	
 	@FXML
 	public void onConnect() {
+	    ConnectionConfig config = manager.getActive();
+	    if (config == null) return;
+
 	    try {
-	    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/ConnectDialog.fxml"));
-	    	Parent root = loader.load();
-	    	
-	    	ConnectDialogController controller = loader.getController();
-	    	controller.setMainConnection(this);
-	    	
-	    	Stage stage = new Stage();
-	    	stage.setScene(new Scene(root));
-	    	stage.show();
-	    }
-	    catch(Exception e) {
-	    	e.printStackTrace();
+	        Connection conn = db.connect(
+	                config.getHost(),
+	                config.getPort(),
+	                config.getDatabase(),
+	                config.getUser(),
+	                config.getPassword()
+	        );
+
+	        config.setConnection(conn);
+
+	        updateList();
+	        updateStatus();
+	        
+	        saveState();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
 	    }
 	}
 
 	@FXML
 	public void onDisconnect() {
-	    manager.removeActive();
-	    
-	    connectionList.getItems().clear();
-	    connectionList.getItems().addAll(manager.getSessions());
-	    
+	    ConnectionConfig config = manager.getActive();
+	    if (config == null) return;
+
+	    try {
+	        if (config.getConnection() != null)
+	            config.getConnection().close();
+
+	        config.setConnection(null);
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    updateList();
 	    updateStatus();
 	}
-
 	@FXML
 	public void onClear() {
 	    sqlArea.clear();
 	    tableView.getItems().clear();
 	}
 	
-	public void addConnection(String host, String dbName, Connection conn) {
-	    manager.addSession(host, dbName, conn);
+	@FXML
+	public void onAdd() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddConnectionDialog.fxml"));
+			Parent root = loader.load();
+			
+			AddConnectionController controller = loader.getController();
+			controller.setMainController(this);
+			
+			Stage stage = new Stage();
+			stage.setTitle("Add connection");
+			stage.setScene(new Scene(root));
+			stage.show();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void onRemove() {
+	    ConnectionConfig session = manager.getActive();
+	    if (session == null) return;
 
-	    connectionList.getItems().setAll(manager.getSessions());
+	    manager.removeSession(session);
 
-	    connectionList.getSelectionModel().selectLast();
-	    manager.setActive(manager.getSessions().getLast());
-
+	    updateList();
 	    updateStatus();
+
+	    saveState();
+	}
+	
+	public void addConnection(ConnectionConfig config) {
+	    manager.addSession(config);
+	    connectionList.getItems().setAll(manager.getSessions());
+	    manager.setActive(config);
+	   
+	    updateStatus();
+	    
+	    saveState();
 	}
 
 	private void updateStatus() {
-		ConnectionManager.DBSession session = manager.getActive();
-		
-		if(session == null || session.connection == null) {
-			statusLabel.setText("Disconnected");
-			return;
-		}
-		statusLabel.setText("Active: " + session.dbName + " | " + session.host);
+	    ConnectionConfig session = manager.getActive();
+
+	    if (session == null) {
+	        statusLabel.setText("Disconnected");
+	        return;
+	    }
+
+	    statusLabel.setText(
+	        session.getName() +
+	        " | " +
+	        (session.getConnection() != null ? "ONLINE" : "OFFLINE")
+	    );
+	}
+	
+	private void updateList() {
+	    connectionList.getItems().setAll(manager.getSessions());
+	}
+	
+	private void saveState() {
+	    ConnectionStorage.save(manager.getSessions());
 	}
 }

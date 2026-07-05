@@ -20,6 +20,10 @@
         <VBox spacing="10" style="-fx-padding:10;">
             <Label text="Connections"/>
             <ListView fx:id="connectionList" prefWidth="150"/>
+            <HBox spacing="10">
+            	<Button text="+" onAction="#onAdd"/>
+            	<Button text="-" onAction="#onRemove"/>
+            </HBox>
         </VBox>
     </left>
 
