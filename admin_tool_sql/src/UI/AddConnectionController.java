@@ -21,6 +21,8 @@ public class AddConnectionController {
     private MainController mainController;
 
     private final DBConnection dbConnection = new DBConnection();
+    
+    private ConnectionConfig editingConfig = null;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -36,22 +38,28 @@ public class AddConnectionController {
             String user = userField.getText();
             String pass = passwordField.getText();
 
-            // poprawne połączenie
-            Connection conn = dbConnection.connect(
-                    host,
-                    port,
-                    db,
-                    user,
-                    pass
-            );
+            if (editingConfig != null) {
 
-            ConnectionConfig config = new ConnectionConfig(
-                    name, host, port, db, user, pass
-            );
+                editingConfig.setName(name);
+                editingConfig.setHost(host);
+                editingConfig.setPort(port);
+                editingConfig.setDatabase(db);
+                editingConfig.setUser(user);
+                editingConfig.setPassword(pass);
 
-            config.setConnection(conn);
+                mainController.refreshList(); // patrz niżej
 
-            mainController.addConnection(config);
+            } else {
+
+                Connection conn = dbConnection.connect(host, port, db, user, pass);
+
+                ConnectionConfig config = new ConnectionConfig(
+                        name, host, port, db, user, pass
+                );
+
+                config.setConnection(conn);
+                mainController.addConnection(config);
+            }
 
             close();
 
@@ -59,7 +67,7 @@ public class AddConnectionController {
             e.printStackTrace();
         }
     }
-
+    
     @FXML
     public void onCancel() {
         close();
@@ -68,5 +76,16 @@ public class AddConnectionController {
     private void close() {
         Stage stage = (Stage) nameField.getScene().getWindow();
         stage.close();
+    }
+    
+    public void setEditMode(ConnectionConfig config) {  	
+        this.editingConfig = config;
+
+        nameField.setText(config.getName());
+        hostField.setText(config.getHost());
+        portField.setText(String.valueOf(config.getPort()));
+        dbField.setText(config.getDatabase());
+        userField.setText(config.getUser());
+        passwordField.setText(config.getPassword());
     }
 }

@@ -31,14 +31,15 @@ public class ConnectionConfig implements Serializable {
     public String getDatabase() { return database; }
     public String getUser() { return user; }
     public String getPassword() { return password; }
+    public Connection getConnection() {return connection; }
 
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
-    }
+    public void setName(String name) {this.name = name; }
+    public void setHost(String host) {this.host = host; }
+    public void setPort(int port) {this.port = port; }
+    public void setDatabase(String database) {this.database = database; }
+    public void setUser(String user) {this.user = user; }
+    public void setPassword(String password) {this.password = password; }    
+    public void setConnection(Connection connection) {this.connection = connection; }
 
     public boolean isConnected() {
         return connection != null;

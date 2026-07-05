@@ -161,6 +161,29 @@ public class MainController {
 	    saveState();
 	}
 	
+	@FXML
+	public void onEdit() {
+	    ConnectionConfig selected = connectionList.getSelectionModel().getSelectedItem();
+	    if (selected == null) return;
+
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddConnectionDialog.fxml"));
+	        Parent root = loader.load();
+
+	        AddConnectionController controller = loader.getController();
+	        controller.setMainController(this);
+	        controller.setEditMode(selected);
+
+	        Stage stage = new Stage();
+	        stage.setTitle("Edit connection");
+	        stage.setScene(new Scene(root));
+	        stage.show();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 	public void addConnection(ConnectionConfig config) {
 	    manager.addSession(config);
 	    connectionList.getItems().setAll(manager.getSessions());
@@ -192,5 +215,10 @@ public class MainController {
 	
 	private void saveState() {
 	    ConnectionStorage.save(manager.getSessions());
+	}
+	
+	public void refreshList() {
+	    connectionList.getItems().setAll(manager.getSessions());
+	    updateStatus();
 	}
 }

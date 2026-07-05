@@ -23,7 +23,11 @@
             <HBox spacing="10">
             	<Button text="+" onAction="#onAdd"/>
             	<Button text="-" onAction="#onRemove"/>
+            	<Button text="Edit" onAction="#onEdit"/>
             </HBox>
+            <Label fx:id="statusLabel"
+               text="Disconnected"
+               style="-fx-padding:25; -fx-background-color:gray; -fx-text-fill:black;"/>
         </VBox>
     </left>
 
@@ -48,9 +52,6 @@
     </center>
 
     <bottom>
-        <Label fx:id="statusLabel"
-               text="Disconnected"
-               style="-fx-padding:8; -fx-background-color:#222; -fx-text-fill:white;"/>
     </bottom>
 
 </BorderPane>
