@@ -3,6 +3,8 @@ package UI;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Label;
 import javafx.collections.ObservableList;
 
 import java.sql.Connection;
@@ -20,6 +22,12 @@ public class MainController {
 	
 	@FXML
 	private TableView<ObservableList<String>> tableView;
+	
+	@FXML
+	private ListView<String> connectionsList;
+	
+	@FXML
+	private Label statusLabel;	
 	
 	private final DBConnection db = new DBConnection();
 	private final QueryExecutor executor = new QueryExecutor();
@@ -42,6 +50,22 @@ public class MainController {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	@FXML
+	public void onConnect() {
+	    statusLabel.setText("Connected");
+	}
+
+	@FXML
+	public void onDisconnect() {
+	    statusLabel.setText("Disconnected");
+	}
+
+	@FXML
+	public void onClear() {
+	    sqlArea.clear();
+	    tableView.getItems().clear();
 	}
 
 }

@@ -3,18 +3,50 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10" xmlns="http://javafx.com/javafx"
-	xmlns:fx="http://javafx.com/fxml"
-	fx:controller="UI.MainController">
-	
-	<Label text="SQL Editor"/>
-	
-	<TextArea fx:id="sqlArea" prefHeight="150"/>
-	
-	<Button text="Execute" onAction="#onExecute"/>
-	
-	<Label text="results"/>
-	
-	<TableView fx:id="tableView" prefHeight="300"/>
-	
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="UI.MainController">
+
+    <top>
+        <HBox spacing="10" style="-fx-padding:10;">
+            <Button text="Connect" onAction="#onConnect"/>
+            <Button text="Disconnect" onAction="#onDisconnect"/>
+            <Button text="Execute" onAction="#onExecute"/>
+            <Button text="Clear" onAction="#onClear"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" style="-fx-padding:10;">
+            <Label text="Connections"/>
+            <ListView fx:id="connectionList" prefWidth="150"/>
+        </VBox>
+    </left>
+
+    <center>
+        <SplitPane orientation="VERTICAL">
+
+            <items>
+
+                <VBox spacing="5" style="-fx-padding:10;">
+                    <Label text="SQL Editor"/>
+                    <TextArea fx:id="sqlArea" prefHeight="150"/>
+                </VBox>
+
+                <VBox spacing="5" style="-fx-padding:10;">
+                    <Label text="Results"/>
+                    <TableView fx:id="tableView"/>
+                </VBox>
+
+            </items>
+
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <Label fx:id="statusLabel"
+               text="Disconnected"
+               style="-fx-padding:8; -fx-background-color:#222; -fx-text-fill:white;"/>
+    </bottom>
+
+</BorderPane>
