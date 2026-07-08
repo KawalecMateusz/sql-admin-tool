@@ -13,6 +13,7 @@
             <Button text="Disconnect" onAction="#onDisconnect"/>
             <Button text="Execute" onAction="#onExecute"/>
             <Button text="Clear" onAction="#onClear"/>
+            <Button text="History" onAction="#onHistory"/>
         </HBox>
     </top>
 

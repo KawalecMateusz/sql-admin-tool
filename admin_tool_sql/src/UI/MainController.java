@@ -21,12 +21,15 @@ import java.sql.SQLException;
 
 import Database.DBConnection;
 import Database.QueryExecutor;
+import Database.QueryHistoryManager;
 import Database.QueryResult;
 import Database.ConnectionManager;
 import Database.ConnectionConfig;
 import Database.ConnectionStorage;
 import Database.DatabaseTreeItem;
 import Database.SchemaLoader;
+import Database.QueryHistory;
+import Database.QueryHistoryManager;
 
 public class MainController {
 
@@ -49,6 +52,7 @@ public class MainController {
 	private final QueryExecutor executor = new QueryExecutor();
 	private final ConnectionManager manager = new ConnectionManager();
 	private final SchemaLoader schemaLoader = new SchemaLoader();
+	private final List<QueryHistory> history = QueryHistoryManager.load();
 	
 	@FXML
 	public void initialize() {
@@ -73,6 +77,7 @@ public class MainController {
 	@FXML
 	public void onExecute() {
 	    String sql = sqlArea.getText();
+ 
 
 	    try {
 	        ConnectionConfig session = manager.getActive();
@@ -84,12 +89,16 @@ public class MainController {
 	        QueryResult result = executor.execute(session.getConnection(), sql);
 
 	       if(result.hasTable) {
-	    	TableBuilder.show(tableView,  result.resultSet);   
+	    	   TableBuilder.show(tableView,  result.resultSet);   
 	       }
 	       else {
-	    	   statusLabel.setText(result.message);
+	    	   TableBuilder.showMessage( tableView, result.message);
 	       }
 	       
+	       String type = sql.trim().split(" ")[0].toUpperCase();
+		   history.add(new QueryHistory(session.getName(), session.getDatabase(), sql, type));
+	       QueryHistoryManager.save(history);
+		    
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
@@ -124,6 +133,30 @@ public class MainController {
 	    }
 	}
 
+	@FXML
+	public void onHistory(){
+
+	    try{
+
+	        FXMLLoader loader =
+	            new FXMLLoader(
+	              getClass().getResource("/History.fxml")
+	            );
+
+	        Parent root = loader.load();
+
+	        Stage stage = new Stage();
+
+	        stage.setTitle("Query history");
+	        stage.setScene(new Scene(root));
+	        stage.show();
+
+
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+	}
+	
 	@FXML
 	public void onDisconnect() {
 	    ConnectionConfig config = manager.getActive();

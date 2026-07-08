@@ -43,4 +43,21 @@ public class TableBuilder {
         }
         tableView.setItems(data);
     }
+    
+    public static void showMessage(TableView<ObservableList<String>> table, String message) {
+    	table.getColumns().clear();
+    	table.getItems().clear();
+    	
+    	TableColumn<ObservableList<String>, String> column = new TableColumn<>("Result");
+    	
+    	column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(0)));
+    	
+    	table.getColumns().add(column);
+    	
+    	ObservableList<String> row = FXCollections.observableArrayList();
+    	
+    	row.add(message);
+    	
+    	table.getItems().add(row);
+    }
 }
