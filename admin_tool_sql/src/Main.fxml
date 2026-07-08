@@ -32,24 +32,27 @@
     </left>
 
     <center>
-        <SplitPane orientation="VERTICAL">
-
-            <items>
-
-                <VBox spacing="5" style="-fx-padding:10;">
-                    <Label text="SQL Editor"/>
-                    <TextArea fx:id="sqlArea" prefHeight="150"/>
-                </VBox>
-
-                <VBox spacing="5" style="-fx-padding:10;">
-                    <Label text="Results"/>
-                    <TableView fx:id="tableView"/>
-                </VBox>
-
-            </items>
-
-        </SplitPane>
-    </center>
+    <SplitPane orientation="HORIZONTAL">
+        <items>
+            <SplitPane orientation="VERTICAL">
+                <items>
+                    <VBox spacing="5" style="-fx-padding:10;">
+                        <Label text="SQL Editor"/>
+                        <TextArea fx:id="sqlArea" prefHeight="150"/>
+                    </VBox>
+                    <VBox spacing="5" style="-fx-padding:10;">
+                        <Label text="Results"/>
+                        <TableView fx:id="tableView"/>
+                    </VBox>
+                </items>
+            </SplitPane>
+            <VBox spacing="5" style="-fx-padding:10;">
+                <Label text="Database Structure"/>
+                <TreeView fx:id="databaseTree"/>
+            </VBox>
+        </items>
+    </SplitPane>
+	</center>
 
     <bottom>
     </bottom>

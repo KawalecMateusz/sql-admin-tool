@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.collections.ObservableList;
 
 import java.sql.Connection;
@@ -22,6 +24,8 @@ import Database.QueryExecutor;
 import Database.ConnectionManager;
 import Database.ConnectionConfig;
 import Database.ConnectionStorage;
+import Database.DatabaseTreeItem;
+import Database.SchemaLoader;
 
 public class MainController {
 
@@ -37,9 +41,13 @@ public class MainController {
 	@FXML
 	private Label statusLabel;	
 	
+	@FXML
+	private TreeView<DatabaseTreeItem> databaseTree;
+	
 	private final DBConnection db = new DBConnection();
 	private final QueryExecutor executor = new QueryExecutor();
 	private final ConnectionManager manager = new ConnectionManager();
+	private final SchemaLoader schemaLoader = new SchemaLoader();
 	
 	@FXML
 	public void initialize() {
@@ -47,13 +55,15 @@ public class MainController {
 	    List<ConnectionConfig> loaded = ConnectionStorage.load();
 	    manager.setSessions(loaded);
 
-	    connectionList.setOnMouseClicked(e -> {
-	        var selected = connectionList.getSelectionModel().getSelectedItem();
-	        if (selected != null) {
-	            manager.setActive(selected);
-	            updateStatus();
-	        }
-	    });
+	    connectionList.getSelectionModel().selectedItemProperty()
+	        .addListener((obs, oldValue, newValue) -> {
+	            if(newValue != null) {
+
+	                manager.setActive(newValue);
+
+	                updateStatus();
+	                updateDatabaseTree();
+	            }});
 
 	    updateList();
 	    updateStatus();
@@ -95,9 +105,12 @@ public class MainController {
 
 	        config.setConnection(conn);
 
+	        config.setConnection(conn);
+
 	        updateList();
 	        updateStatus();
-	        
+	        updateDatabaseTree();
+
 	        saveState();
 
 	    } catch (Exception e) {
@@ -122,6 +135,7 @@ public class MainController {
 
 	    updateList();
 	    updateStatus();
+	    updateDatabaseTree();
 	}
 	@FXML
 	public void onClear() {
@@ -185,12 +199,15 @@ public class MainController {
 	}
 	
 	public void addConnection(ConnectionConfig config) {
+
 	    manager.addSession(config);
-	    connectionList.getItems().setAll(manager.getSessions());
-	    manager.setActive(config);
-	   
+	    updateList();
+
+	    connectionList.getSelectionModel().select(config);
+
 	    updateStatus();
-	    
+	    updateDatabaseTree();
+
 	    saveState();
 	}
 
@@ -213,12 +230,30 @@ public class MainController {
 	    connectionList.getItems().setAll(manager.getSessions());
 	}
 	
+	private void updateDatabaseTree() {
+
+	    ConnectionConfig config = manager.getActive();
+
+	    if(config == null || config.getConnection() == null) {
+	        databaseTree.setRoot(null);
+	        return;
+	    }
+
+	    databaseTree.setRoot(
+	        schemaLoader.load(
+	            config.getConnection(),
+	            config.getDatabase()
+	        )
+	    );
+	}
+	
 	private void saveState() {
 	    ConnectionStorage.save(manager.getSessions());
 	}
 	
 	public void refreshList() {
-	    connectionList.getItems().setAll(manager.getSessions());
+	    updateList();
 	    updateStatus();
+	    updateDatabaseTree();
 	}
 }
