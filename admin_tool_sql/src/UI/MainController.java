@@ -21,6 +21,7 @@ import java.sql.SQLException;
 
 import Database.DBConnection;
 import Database.QueryExecutor;
+import Database.QueryResult;
 import Database.ConnectionManager;
 import Database.ConnectionConfig;
 import Database.ConnectionStorage;
@@ -79,11 +80,16 @@ public class MainController {
 	        if(session == null || session.getConnection() == null) {
 	        	throw new RuntimeException("No active ceonnection");
 	        }
-	        var conn = session.getConnection();
-	        var stmt = conn.createStatement();
-	        var rs = stmt.executeQuery(sql);
-	        TableBuilder.show(tableView, rs);
+	        
+	        QueryResult result = executor.execute(session.getConnection(), sql);
 
+	       if(result.hasTable) {
+	    	TableBuilder.show(tableView,  result.resultSet);   
+	       }
+	       else {
+	    	   statusLabel.setText(result.message);
+	       }
+	       
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
