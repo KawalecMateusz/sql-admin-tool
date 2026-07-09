@@ -26,10 +26,13 @@ import Database.QueryResult;
 import Database.ConnectionManager;
 import Database.ConnectionConfig;
 import Database.ConnectionStorage;
+import Database.ConnectionWorker;
 import Database.DatabaseTreeItem;
 import Database.SchemaLoader;
 import Database.QueryHistory;
 import Database.QueryHistoryManager;
+import Database.ConnectionWorker;
+import Database.SQLTask;
 
 public class MainController {
 
@@ -86,15 +89,26 @@ public class MainController {
 	        	throw new RuntimeException("No active ceonnection");
 	        }
 	        
-	        QueryResult result = executor.execute(session.getConnection(), sql);
+	        session.getWorker().executeSQL(
 
-	       if(result.hasTable) {
-	    	   TableBuilder.show(tableView,  result.resultSet);   
-	       }
-	       else {
-	    	   TableBuilder.showMessage( tableView, result.message);
-	       }
-	       
+	        	    new SQLTask(sql, result -> {
+
+	        	        javafx.application.Platform.runLater(()->{
+
+	        	            try {
+	        	                if(result.hasTable) {
+	        	                    TableBuilder.show(tableView, result.resultSet);
+	        	                }
+	        	                else {
+	        	                    TableBuilder.showMessage(tableView, result.message);
+	        	                }
+	        	            }
+	        	            catch(Exception e) {
+	        	                e.printStackTrace();
+	        	            }
+	        	        });
+	        	    })
+	        	);
 	       String type = sql.trim().split(" ")[0].toUpperCase();
 		   history.add(new QueryHistory(session.getName(), session.getDatabase(), sql, type));
 	       QueryHistoryManager.save(history);
@@ -110,17 +124,14 @@ public class MainController {
 	    if (config == null) return;
 
 	    try {
-	        Connection conn = db.connect(
-	                config.getHost(),
-	                config.getPort(),
-	                config.getDatabase(),
-	                config.getUser(),
-	                config.getPassword()
-	        );
+	    	Connection conn = db.connect( config.getHost(),config.getPort(),config.getDatabase(),config.getUser(),config.getPassword());
 
-	        config.setConnection(conn);
-
-	        config.setConnection(conn);
+	    	config.setConnection(conn);
+	       ConnectionWorker worker = new ConnectionWorker(config, conn);
+	       
+	       config.setWorker(worker);
+	       
+	       worker.start();
 
 	        updateList();
 	        updateStatus();
@@ -163,10 +174,14 @@ public class MainController {
 	    if (config == null) return;
 
 	    try {
-	        if (config.getConnection() != null)
-	            config.getConnection().close();
-
-	        config.setConnection(null);
+	    	if(config.getWorker() != null) {
+	    	    config.getWorker().stopWorker();
+	    	    config.setWorker(null);
+	    	}
+	    	if(config.getConnection() != null) {
+	    	    config.getConnection().close();
+	    	    config.setConnection(null);
+	    	}
 
 	    } catch (Exception e) {
 	        e.printStackTrace();

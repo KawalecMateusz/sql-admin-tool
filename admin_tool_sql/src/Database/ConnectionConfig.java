@@ -15,6 +15,7 @@ public class ConnectionConfig implements Serializable {
     private String password;
 
     private transient Connection connection;
+    private transient ConnectionWorker worker;
 
     public ConnectionConfig(String name, String host, int port, String database, String user, String password) {
         this.name = name;
@@ -49,5 +50,13 @@ public class ConnectionConfig implements Serializable {
     public String toString() {
         return name + " (" + host + ") " +
                 (connection != null ? "🟢" : "🔴");
+    }
+    
+    public ConnectionWorker getWorker() {
+    	return worker;
+    }
+    
+    public void setWorker(ConnectionWorker worker) {
+    	this.worker=worker;
     }
 }

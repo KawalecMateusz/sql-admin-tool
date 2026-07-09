@@ -8,4 +8,13 @@ public class QueryResult {
     public ResultSet resultSet;
     public String message;
 
+    public QueryResult() {
+
+    }
+    
+    public QueryResult(boolean hasTable, ResultSet resultSet, String message) {
+        this.hasTable = hasTable;
+        this.resultSet = resultSet;
+        this.message = message;
+    }
 }
