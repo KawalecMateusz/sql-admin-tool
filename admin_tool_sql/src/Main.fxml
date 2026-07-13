@@ -3,17 +3,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
+<BorderPane fx:id="mainPane"
+			xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="UI.MainController">
-
     <top>
         <HBox spacing="10" style="-fx-padding:10;">
             <Button text="Connect" onAction="#onConnect"/>
             <Button text="Disconnect" onAction="#onDisconnect"/>
-            <Button text="Execute" onAction="#onExecute"/>
-            <Button text="Clear" onAction="#onClear"/>
-            <Button text="History" onAction="#onHistory"/>
+            <Button text="Dashboard" onAction="#showDashboard"/>
+       	 	<Button text="SQL" onAction="#showSQL"/>
+        	<Button text="History" onAction="#onHistory"/>
         </HBox>
     </top>
 
@@ -33,27 +33,8 @@
     </left>
 
     <center>
-    <SplitPane orientation="HORIZONTAL">
-        <items>
-            <SplitPane orientation="VERTICAL">
-                <items>
-                    <VBox spacing="5" style="-fx-padding:10;">
-                        <Label text="SQL Editor"/>
-                        <TextArea fx:id="sqlArea" prefHeight="150"/>
-                    </VBox>
-                    <VBox spacing="5" style="-fx-padding:10;">
-                        <Label text="Results"/>
-                        <TableView fx:id="tableView"/>
-                    </VBox>
-                </items>
-            </SplitPane>
-            <VBox spacing="5" style="-fx-padding:10;">
-                <Label text="Database Structure"/>
-                <TreeView fx:id="databaseTree"/>
-            </VBox>
-        </items>
-    </SplitPane>
-	</center>
+
+    </center>
 
     <bottom>
     </bottom>

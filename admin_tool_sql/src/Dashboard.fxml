@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="UI.DashboardController">
+            
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="15" style="-fx-padding:15;">
+                <HBox spacing="20">
+                    <VBox spacing="5">
+                        <Label text="Server information"/>
+                        <Separator/>
+                        <Label fx:id="nameLabel"/>
+                        <Label fx:id="addressLabel"/>
+                        <Label fx:id="portLabel"/>
+                        <Label fx:id="versionLabel"/>
+                        <Label fx:id="uptimeLabel"/>
+                    </VBox>
+
+                    <VBox spacing="5">
+                        <Label text="Alerts"/>
+                        <Separator/>
+                        <ListView fx:id="alertList" prefHeight="120"/>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="20">
+                    <Label fx:id="connectionLabel" text="Connections"/>
+                    <Label fx:id="latencyLabel" text="Latency"/>
+                    <Label fx:id="cacheLabel" text="Cache hit"/>
+                    <Label fx:id="deadlockLabel" text="Deadlocks"/>
+                </HBox>
+
+                <HBox spacing="20">
+                    <VBox>
+                        <Label text="Active connections"/>
+                        <TableView fx:id="activeConnectionsTable" prefHeight="200"/>
+                    </VBox>
+
+                    <VBox>
+                        <Label text="Tables size"/>
+                        <TableView fx:id="tablesSizeTable" prefHeight="200"/>
+                    </VBox>
+                </HBox>
+
+                <LineChart fx:id="latencyChart">
+                <xAxis>
+        			<CategoryAxis/>
+    			</xAxis>
+   				<yAxis>
+        			<NumberAxis/>
+    			</yAxis>
+                </LineChart>
+                <LineChart fx:id="queriesChart">
+                 <xAxis>
+        			<CategoryAxis/>
+    			</xAxis>
+   				<yAxis>
+        			<NumberAxis/>
+    			</yAxis>
+                </LineChart>
+                <LineChart fx:id="rowsModifiedChart">
+                 <xAxis>
+        			<CategoryAxis/>
+    			</xAxis>
+   				<yAxis>
+        			<NumberAxis/>
+    			</yAxis>
+                </LineChart>
+                <LineChart fx:id="rowsReturnedChart">
+                 <xAxis>
+        			<CategoryAxis/>
+    			</xAxis>
+   				<yAxis>
+        			<NumberAxis/>
+    			</yAxis>
+                </LineChart>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

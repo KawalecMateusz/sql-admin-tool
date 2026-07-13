@@ -4,44 +4,24 @@ import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.collections.ObservableList;
+
+import javafx.scene.layout.BorderPane;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import Database.DBConnection;
-import Database.QueryExecutor;
-import Database.QueryHistoryManager;
-import Database.QueryResult;
 import Database.ConnectionManager;
 import Database.ConnectionConfig;
 import Database.ConnectionStorage;
 import Database.ConnectionWorker;
-import Database.DatabaseTreeItem;
-import Database.SchemaLoader;
-import Database.QueryHistory;
-import Database.QueryHistoryManager;
-import Database.ConnectionWorker;
-import Database.SQLTask;
 
 public class MainController {
 
-	@FXML
-	private TextArea sqlArea;
-	
-	@FXML
-	private TableView<ObservableList<String>> tableView;
-	
 	@FXML
 	private ListView<ConnectionConfig> connectionList;
 	
@@ -49,13 +29,11 @@ public class MainController {
 	private Label statusLabel;	
 	
 	@FXML
-	private TreeView<DatabaseTreeItem> databaseTree;
+	private BorderPane mainPane;
 	
 	private final DBConnection db = new DBConnection();
-	private final QueryExecutor executor = new QueryExecutor();
 	private final ConnectionManager manager = new ConnectionManager();
-	private final SchemaLoader schemaLoader = new SchemaLoader();
-	private final List<QueryHistory> history = QueryHistoryManager.load();
+	private SQLController sqlController;
 	
 	@FXML
 	public void initialize() {
@@ -64,59 +42,50 @@ public class MainController {
 	    manager.setSessions(loaded);
 
 	    connectionList.getSelectionModel().selectedItemProperty()
-	        .addListener((obs, oldValue, newValue) -> {
-	            if(newValue != null) {
+	    .addListener((obs, oldValue, newValue) -> {
+	        if(newValue != null) {
 
-	                manager.setActive(newValue);
+	            manager.setActive(newValue);
 
-	                updateStatus();
-	                updateDatabaseTree();
-	            }});
+	            updateStatus();
+
+	            if(sqlController != null){
+	                sqlController.refreshTree();
+	            }
+	        }});
 
 	    updateList();
 	    updateStatus();
 	}
-	
 	@FXML
-	public void onExecute() {
-	    String sql = sqlArea.getText();
- 
+	public void showDashboard(){
 
 	    try {
-	        ConnectionConfig session = manager.getActive();
-	        
-	        if(session == null || session.getConnection() == null) {
-	        	throw new RuntimeException("No active ceonnection");
-	        }
-	        
-	        session.getWorker().executeSQL(
+	        Parent root = FXMLLoader.load(getClass().getResource("/dashboard.fxml"));
+	        mainPane.setCenter(root);
 
-	        	    new SQLTask(sql, result -> {
-
-	        	        javafx.application.Platform.runLater(()->{
-
-	        	            try {
-	        	                if(result.hasTable) {
-	        	                    TableBuilder.show(tableView, result.resultSet);
-	        	                }
-	        	                else {
-	        	                    TableBuilder.showMessage(tableView, result.message);
-	        	                }
-	        	            }
-	        	            catch(Exception e) {
-	        	                e.printStackTrace();
-	        	            }
-	        	        });
-	        	    })
-	        	);
-	       String type = sql.trim().split(" ")[0].toUpperCase();
-		   history.add(new QueryHistory(session.getName(), session.getDatabase(), sql, type));
-	       QueryHistoryManager.save(history);
-		    
-	    } catch (Exception e) {
+	    } catch(Exception e){
 	        e.printStackTrace();
 	    }
 	}
+	
+	@FXML
+	public void showSQL(){
+
+	    try {
+	    	FXMLLoader loader =
+	    	        new FXMLLoader(getClass().getResource("/sql.fxml"));
+	    	Parent root = loader.load();
+	    	
+	    	sqlController = loader.getController();
+	    	sqlController.setManager(manager);
+	    	mainPane.setCenter(root);
+
+	    } catch(Exception e){
+	        e.printStackTrace();
+	    }
+	}
+	
 	
 	@FXML
 	public void onConnect() {
@@ -133,9 +102,12 @@ public class MainController {
 	       
 	       worker.start();
 
+	       if(sqlController != null){
+	    	    sqlController.refreshTree();
+	    	}
+	       
 	        updateList();
 	        updateStatus();
-	        updateDatabaseTree();
 
 	        saveState();
 
@@ -189,12 +161,6 @@ public class MainController {
 
 	    updateList();
 	    updateStatus();
-	    updateDatabaseTree();
-	}
-	@FXML
-	public void onClear() {
-	    sqlArea.clear();
-	    tableView.getItems().clear();
 	}
 	
 	@FXML
@@ -260,7 +226,6 @@ public class MainController {
 	    connectionList.getSelectionModel().select(config);
 
 	    updateStatus();
-	    updateDatabaseTree();
 
 	    saveState();
 	}
@@ -284,30 +249,17 @@ public class MainController {
 	    connectionList.getItems().setAll(manager.getSessions());
 	}
 	
-	private void updateDatabaseTree() {
-
-	    ConnectionConfig config = manager.getActive();
-
-	    if(config == null || config.getConnection() == null) {
-	        databaseTree.setRoot(null);
-	        return;
-	    }
-
-	    databaseTree.setRoot(
-	        schemaLoader.load(
-	            config.getConnection(),
-	            config.getDatabase()
-	        )
-	    );
-	}
-	
 	private void saveState() {
 	    ConnectionStorage.save(manager.getSessions());
+	}
+	
+	public ConnectionManager getManager(){
+	    return manager;
 	}
 	
 	public void refreshList() {
 	    updateList();
 	    updateStatus();
-	    updateDatabaseTree();
 	}
+	
 }
