@@ -34,6 +34,7 @@ public class MainController {
 	private final DBConnection db = new DBConnection();
 	private final ConnectionManager manager = new ConnectionManager();
 	private SQLController sqlController;
+	private DashboardController dashboardController;
 	
 	@FXML
 	public void initialize() {
@@ -52,6 +53,9 @@ public class MainController {
 	            if(sqlController != null){
 	                sqlController.refreshTree();
 	            }
+	            if(dashboardController != null) {
+	            	dashboardController.refreshDashboard();
+	            }
 	        }});
 
 	    updateList();
@@ -61,7 +65,13 @@ public class MainController {
 	public void showDashboard(){
 
 	    try {
-	        Parent root = FXMLLoader.load(getClass().getResource("/dashboard.fxml"));
+	    	FXMLLoader loader =new FXMLLoader(getClass().getResource("/dashboard.fxml"));
+	    	Parent root = loader.load();
+	    	
+	    	dashboardController = loader.getController();
+	    	dashboardController.setManager(manager);
+	    	dashboardController.refreshDashboard();
+	    	
 	        mainPane.setCenter(root);
 
 	    } catch(Exception e){

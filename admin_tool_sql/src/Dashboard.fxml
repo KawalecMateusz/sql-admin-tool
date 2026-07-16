@@ -15,11 +15,30 @@
                     <VBox spacing="5">
                         <Label text="Server information"/>
                         <Separator/>
-                        <Label fx:id="nameLabel"/>
-                        <Label fx:id="addressLabel"/>
-                        <Label fx:id="portLabel"/>
-                        <Label fx:id="versionLabel"/>
-                        <Label fx:id="uptimeLabel"/>
+                        <HBox>
+	                        <Label text="Name: "/>
+	                        <Label fx:id="name"/>
+                        </HBox>
+                        <HBox>
+	                        <Label text="Database: "/>
+	                        <Label fx:id="database"/>
+                        </HBox>
+                        <HBox>
+	                        <Label text="Address: "/>
+	                        <Label fx:id="address"/>
+                        </HBox>
+                        <HBox>
+	                        <Label text="Port: "/>
+	                        <Label fx:id="port"/>
+                        </HBox>
+                        <HBox>
+	                        <Label text="Version: "/>
+	                        <Label fx:id="version"/>
+                        </HBox>
+                        <HBox>
+	                        <Label text="Uptime: "/>
+	                        <Label fx:id="uptime"/>
+                        </HBox>
                     </VBox>
 
                     <VBox spacing="5">
@@ -30,21 +49,37 @@
                 </HBox>
 
                 <HBox spacing="20">
-                    <Label fx:id="connectionLabel" text="Connections"/>
-                    <Label fx:id="latencyLabel" text="Latency"/>
-                    <Label fx:id="cacheLabel" text="Cache hit"/>
-                    <Label fx:id="deadlockLabel" text="Deadlocks"/>
-                </HBox>
+					<VBox>
+					    <Label text="Connections active:"/>
+					    <Label fx:id="connectionActive"/>
+					</VBox>
+					<VBox>
+					    <Label text="Connections idle:"/>
+					    <Label fx:id="connectionIdle"/>
+					</VBox>
+					<VBox>
+					    <Label text="Latency"/>
+					    <Label fx:id="latency"/>
+					</VBox>
+					<VBox>
+					    <Label text="Cache hit"/>
+					    <Label fx:id="cache"/>
+					</VBox>
+					<VBox>
+					    <Label text="Deadlocks"/>
+					    <Label fx:id="deadlock"/>
+					</VBox>
+				</HBox>
 
                 <HBox spacing="20">
                     <VBox>
                         <Label text="Active connections"/>
-                        <TableView fx:id="activeConnectionsTable" prefHeight="200"/>
+                        <TableView fx:id="activeConnections" prefHeight="200"/>
                     </VBox>
 
                     <VBox>
                         <Label text="Tables size"/>
-                        <TableView fx:id="tablesSizeTable" prefHeight="200"/>
+                        <TableView fx:id="tablesSize" prefHeight="200"/>
                     </VBox>
                 </HBox>
 
