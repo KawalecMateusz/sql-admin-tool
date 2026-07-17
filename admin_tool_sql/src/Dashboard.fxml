@@ -72,16 +72,29 @@
 				</HBox>
 
                 <HBox spacing="20">
-                    <VBox>
-                        <Label text="Active connections"/>
-                        <TableView fx:id="activeConnections" prefHeight="200"/>
-                    </VBox>
-
-                    <VBox>
-                        <Label text="Tables size"/>
-                        <TableView fx:id="tablesSize" prefHeight="200"/>
-                    </VBox>
-                </HBox>
+				    <VBox spacing="5">
+				        <Label text="Active connections"/>
+				        <TableView fx:id="activeConnections" prefHeight="200">
+				            <columns>
+				                <TableColumn fx:id="pidColumn" text="PID"/>
+				                <TableColumn fx:id="userColumn" text="User"/>
+				                <TableColumn fx:id="databaseColumn" text="Database"/>
+				                <TableColumn fx:id="clientColumn" text="Client"/>
+				                <TableColumn fx:id="stateColumn" text="State"/>
+				            </columns>
+				        </TableView>
+				    </VBox>
+				
+				    <VBox spacing="5">
+				        <Label text="Tables size"/>
+				        <TableView fx:id="tablesSize" prefHeight="200">
+				            <columns>
+				                <TableColumn fx:id="tableNameColumn" text="Table"/>
+				                <TableColumn fx:id="tableSizeColumn" text="Size"/>
+				            </columns>
+				        </TableView>
+				    </VBox>
+				</HBox>
 
                 <LineChart fx:id="latencyChart">
                 <xAxis>

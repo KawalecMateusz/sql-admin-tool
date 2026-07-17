@@ -1,7 +1,12 @@
 package UI;
 
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import Database.ConnectionManager;
 import Database.ConnectionConfig;
@@ -10,6 +15,10 @@ import Dashboard.ServerInfo;
 import Dashboard.ServerInfoLoader;
 import Dashboard.StatsCollector;
 import Dashboard.DashboardStats;
+import Dashboard.TableInfoLoader;
+import Dashboard.TableInfo;
+import Dashboard.ActiveConnectionLoader;
+import Dashboard.ActiveConnectionInfo;
 
 public class DashboardController {
 
@@ -46,13 +55,54 @@ public class DashboardController {
 	@FXML
 	private Label deadlock;
 	
+	@FXML
+	private TableView<ActiveConnectionInfo> activeConnections;
+
+	@FXML
+	private TableColumn<ActiveConnectionInfo, Integer> pidColumn;
+
+	@FXML
+	private TableColumn<ActiveConnectionInfo, String> userColumn;
+
+	@FXML
+	private TableColumn<ActiveConnectionInfo, String> databaseColumn;
+
+	@FXML
+	private TableColumn<ActiveConnectionInfo,String> clientColumn;
+	
+	@FXML
+	private TableColumn<ActiveConnectionInfo, String> stateColumn;
+	
+	@FXML
+	private TableView<TableInfo> tablesSize;
+
+	@FXML
+	private TableColumn<TableInfo,String> tableNameColumn;
+
+	@FXML
+	private TableColumn<TableInfo,String> tableSizeColumn;
+	
 	private final ServerInfoLoader loader = new ServerInfoLoader();
 	private final StatsCollector collector = new StatsCollector();
+	private final TableInfoLoader tableLoader = new TableInfoLoader();
+	private final ActiveConnectionLoader connectionLoader = new ActiveConnectionLoader();
 	
 	private ConnectionManager manager;
 	
 	public void setManager(ConnectionManager manager) {
 	    this.manager = manager;
+	}
+	
+	@FXML
+	public void initialize() {
+
+	    tableNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+	    tableSizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
+	    pidColumn.setCellValueFactory(new PropertyValueFactory<>("pid"));
+	    userColumn.setCellValueFactory(new PropertyValueFactory<>("user"));
+	    databaseColumn.setCellValueFactory(new PropertyValueFactory<>("database"));
+	    stateColumn.setCellValueFactory(new PropertyValueFactory<>("state"));
+	    clientColumn.setCellValueFactory( new PropertyValueFactory<>("client"));
 	}
 	
 	public void refreshDashboard(){
@@ -68,8 +118,10 @@ public class DashboardController {
 	    try{
 
 	        ServerInfo info = loader.load(config);
-	        DashboardStats stats =collector.collect(config.getConnection());
-	        
+	        DashboardStats stats = collector.collect(config.getConnection());
+	        List<TableInfo> tables = tableLoader.load(config.getConnection());
+	        List<ActiveConnectionInfo> connections = connectionLoader.load(config.getConnection());
+
 	        name.setText(info.getName());
 	        database.setText(info.getDatabase());
 	        address.setText(info.getHost());
@@ -82,6 +134,14 @@ public class DashboardController {
 	        latency.setText(stats.getLatency()+" ms");
 	        cache.setText(stats.getCacheHit()+"%");
 	        deadlock.setText(String.valueOf(stats.getDeadlocks()));
+	        
+	        if(activeConnections != null){
+	            activeConnections.getItems().setAll(connections);
+	        }
+	        if(tablesSize != null){
+	            tablesSize.getItems().setAll(tables);
+	        }
+	        
 	    }
 	    catch(Exception e){
 	        e.printStackTrace();

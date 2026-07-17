@@ -70,9 +70,10 @@ public class MainController {
 	    	
 	    	dashboardController = loader.getController();
 	    	dashboardController.setManager(manager);
-	    	dashboardController.refreshDashboard();
 	    	
 	        mainPane.setCenter(root);
+	        
+	        dashboardController.refreshDashboard();
 
 	    } catch(Exception e){
 	        e.printStackTrace();
@@ -114,6 +115,9 @@ public class MainController {
 
 	       if(sqlController != null){
 	    	    sqlController.refreshTree();
+	    	}
+	       if(dashboardController != null){
+	    	    dashboardController.refreshDashboard();
 	    	}
 	       
 	        updateList();
