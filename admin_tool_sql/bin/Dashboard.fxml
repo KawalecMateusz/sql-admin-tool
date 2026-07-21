@@ -95,7 +95,7 @@
 				        </TableView>
 				    </VBox>
 				</HBox>
-
+				<Label text="Latency"/>
                 <LineChart fx:id="latencyChart">
                 <xAxis>
         			<CategoryAxis/>
@@ -104,6 +104,7 @@
         			<NumberAxis/>
     			</yAxis>
                 </LineChart>
+                <Label text="Queries"/>
                 <LineChart fx:id="queriesChart">
                  <xAxis>
         			<CategoryAxis/>
@@ -112,6 +113,7 @@
         			<NumberAxis/>
     			</yAxis>
                 </LineChart>
+                <Label text="Rows Modified/sec"/>
                 <LineChart fx:id="rowsModifiedChart">
                  <xAxis>
         			<CategoryAxis/>
@@ -120,6 +122,7 @@
         			<NumberAxis/>
     			</yAxis>
                 </LineChart>
+                <Label text="Rows Returned/sec"/>
                 <LineChart fx:id="rowsReturnedChart">
                  <xAxis>
         			<CategoryAxis/>

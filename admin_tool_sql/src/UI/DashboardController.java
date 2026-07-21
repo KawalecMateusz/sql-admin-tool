@@ -7,6 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.LineChart;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import Database.ConnectionManager;
 import Database.ConnectionConfig;
@@ -19,6 +24,9 @@ import Dashboard.TableInfoLoader;
 import Dashboard.TableInfo;
 import Dashboard.ActiveConnectionLoader;
 import Dashboard.ActiveConnectionInfo;
+import Dashboard.ChartDataLoader;
+import Dashboard.DashboardSample;
+import Dashboard.ChartHistory;
 
 public class DashboardController {
 
@@ -82,15 +90,35 @@ public class DashboardController {
 	@FXML
 	private TableColumn<TableInfo,String> tableSizeColumn;
 	
+	@FXML
+	private LineChart<String, Number> latencyChart;
+
+	@FXML
+	private LineChart<String, Number> queriesChart;
+
+	@FXML
+	private LineChart<String, Number> rowsModifiedChart;
+
+	@FXML
+	private LineChart<String, Number> rowsReturnedChart;
+	
 	private final ServerInfoLoader loader = new ServerInfoLoader();
 	private final StatsCollector collector = new StatsCollector();
 	private final TableInfoLoader tableLoader = new TableInfoLoader();
 	private final ActiveConnectionLoader connectionLoader = new ActiveConnectionLoader();
+	private final ChartDataLoader chartLoader = new ChartDataLoader();
+	private final ChartHistory history = new ChartHistory();
 	
+	private Timeline refreshTimeline;
 	private ConnectionManager manager;
 	
 	public void setManager(ConnectionManager manager) {
 	    this.manager = manager;
+	    history.clear();
+	    
+	    if(refreshTimeline != null) {
+	    	refreshTimeline.play();
+	    }
 	}
 	
 	@FXML
@@ -103,6 +131,15 @@ public class DashboardController {
 	    databaseColumn.setCellValueFactory(new PropertyValueFactory<>("database"));
 	    stateColumn.setCellValueFactory(new PropertyValueFactory<>("state"));
 	    clientColumn.setCellValueFactory( new PropertyValueFactory<>("client"));
+	    
+	    refreshTimeline = new Timeline(
+	            new KeyFrame(Duration.seconds(1), e -> {
+	                if(manager != null && manager.getActive() != null && manager.getActive().getConnection() != null){
+	                    refreshDashboard();
+	                }
+	            })
+	    );
+	    refreshTimeline.setCycleCount(Timeline.INDEFINITE);
 	}
 	
 	public void refreshDashboard(){
@@ -119,6 +156,8 @@ public class DashboardController {
 
 	        ServerInfo info = loader.load(config);
 	        DashboardStats stats = collector.collect(config.getConnection());
+	        DashboardSample sample = chartLoader.load(config.getConnection());
+	        history.add(sample);
 	        List<TableInfo> tables = tableLoader.load(config.getConnection());
 	        List<ActiveConnectionInfo> connections = connectionLoader.load(config.getConnection());
 
@@ -142,6 +181,7 @@ public class DashboardController {
 	            tablesSize.getItems().setAll(tables);
 	        }
 	        
+	        refreshCharts();
 	    }
 	    catch(Exception e){
 	        e.printStackTrace();
@@ -192,5 +232,42 @@ public class DashboardController {
 	    }
 
 	    return uptime;
+	}
+	
+	private void refreshCharts(){
+
+	    latencyChart.getData().clear();
+	    queriesChart.getData().clear();
+	    rowsModifiedChart.getData().clear();
+	    rowsReturnedChart.getData().clear();
+
+	    XYChart.Series<String, Number> latencySeries = new XYChart.Series<>();
+	    XYChart.Series<String, Number> queriesSeries = new XYChart.Series<>();
+	    XYChart.Series<String, Number> modifiedSeries = new XYChart.Series<>();
+	    XYChart.Series<String, Number> returnedSeries = new XYChart.Series<>();
+	    latencySeries.setName("Latency");
+	    queriesSeries.setName("Queries");
+	    modifiedSeries.setName("Rows modified");
+	    returnedSeries.setName("Rows returned");
+	    
+	    int i = 1;
+
+	    for(DashboardSample sample : history.getHistory()){
+	        String point = String.valueOf(i++);
+
+	        latencySeries.getData().add(new XYChart.Data<>(point, sample.getLatency()));
+
+	        queriesSeries.getData().add(new XYChart.Data<>(point, sample.getQueries()));
+
+	        modifiedSeries.getData().add(new XYChart.Data<>(point, sample.getRowsModified()));
+
+	        returnedSeries.getData().add(new XYChart.Data<>(point, sample.getRowsReturned()));
+	    }
+	    
+	    latencyChart.getData().add(latencySeries);
+	    queriesChart.getData().add(queriesSeries);
+	    rowsModifiedChart.getData().add(modifiedSeries);
+	    rowsReturnedChart.getData().add(returnedSeries);
+
 	}
 }
