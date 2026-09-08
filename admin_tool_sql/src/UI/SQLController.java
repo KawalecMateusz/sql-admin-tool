@@ -56,6 +56,7 @@ public class SQLController {
                         try {
                             if(result.hasTable){TableBuilder.show(
                                     tableView, result.resultSet);
+                            		tableView.getColumns().forEach(col->col.setPrefWidth(80));
                             }
                             else {
                                 TableBuilder.showMessage(

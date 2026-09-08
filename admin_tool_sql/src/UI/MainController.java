@@ -132,24 +132,20 @@ public class MainController {
 
 	@FXML
 	public void onHistory(){
-
-	    try{
-
-	        FXMLLoader loader =
-	            new FXMLLoader(
-	              getClass().getResource("/History.fxml")
-	            );
-
+		try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/History.fxml"));
 	        Parent root = loader.load();
 
 	        Stage stage = new Stage();
+	        stage.setTitle("History");
 
-	        stage.setTitle("Query history");
-	        stage.setScene(new Scene(root));
+	        Scene scene = new Scene(root);
+	        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+
+	        stage.setScene(scene);
 	        stage.show();
 
-
-	    }catch(Exception e){
+	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
 	}
@@ -179,21 +175,25 @@ public class MainController {
 	
 	@FXML
 	public void onAdd() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddConnectionDialog.fxml"));
-			Parent root = loader.load();
-			
-			AddConnectionController controller = loader.getController();
-			controller.setMainController(this);
-			
-			Stage stage = new Stage();
-			stage.setTitle("Add connection");
-			stage.setScene(new Scene(root));
-			stage.show();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddConnectionDialog.fxml"));
+	        Parent root = loader.load();
+
+	        AddConnectionController controller = loader.getController();
+	        controller.setMainController(this);
+
+	        Stage stage = new Stage();
+	        stage.setTitle("Add connection");
+
+	        Scene scene = new Scene(root);
+	        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+
+	        stage.setScene(scene);
+	        stage.show();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	@FXML
@@ -224,7 +224,11 @@ public class MainController {
 
 	        Stage stage = new Stage();
 	        stage.setTitle("Edit connection");
-	        stage.setScene(new Scene(root));
+	        
+	        Scene scene = new Scene(root);
+	        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+	        
+	        stage.setScene(scene);
 	        stage.show();
 
 	    } catch (Exception e) {

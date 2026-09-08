@@ -19,7 +19,9 @@ public class Main extends Application {
 		startLoadTest();
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main.fxml"));
-		Scene scene = new Scene(loader.load(), 900, 600);
+		Scene scene = new Scene(loader.load(), 1350, 900);
+		
+		scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 		
 		stage.setTitle("ADMIN SQL TOOL");
 		stage.setScene(scene);
@@ -29,12 +31,6 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 	private void startLoadTest() {

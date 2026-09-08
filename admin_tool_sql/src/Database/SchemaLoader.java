@@ -3,9 +3,6 @@ package Database;
 import java.sql.Connection;
 import javafx.scene.control.TreeItem;
 
-import Database.DatabaseTreeItem;
-import Database.NodeType;
-
 public class SchemaLoader {
 	
 	public static TreeItem<DatabaseTreeItem> load(Connection conn,
