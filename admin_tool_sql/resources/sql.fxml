@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+ <!--
+    Defines the layout of the SQL editor panel used to write queries and analyze query results in a table, as well as display the database structure as a tree.
+-->
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -10,28 +14,37 @@
     <center>
         <SplitPane orientation="HORIZONTAL">
             <items>
+            
                 <SplitPane orientation="VERTICAL">
                     <items>
+                    
                         <VBox spacing="5" styleClass="sqlBox">
                             <Label text="SQL Editor" styleClass="sectionHeader"/>
+                            
                             <HBox spacing="10" styleClass="sqlToolBar">
                                 <Button text="Execute" onAction="#onExecute" styleClass="btnAccent"/>
                                 <Button text="Clear" onAction="#onClear"/>
                             </HBox>
+                            
                             <TextArea fx:id="sqlArea" prefHeight="150" VBox.vgrow="ALWAYS"/>
                         </VBox>
+                        
                         <VBox spacing="5" styleClass="sqlBox">
                             <Label text="Results" styleClass="sectionHeader"/>
                             <TableView fx:id="tableView" VBox.vgrow="ALWAYS"/>
                         </VBox>
+                        
                     </items>
                 </SplitPane>
+                
                 <VBox spacing="5" styleClass="sqlBox, sqlSidebar" prefWidth="220">
                     <Label text="Database Structure" styleClass="sectionHeader"/>
                     <TreeView fx:id="databaseTree" VBox.vgrow="ALWAYS"/>
                 </VBox>
+                
             </items>
         </SplitPane>
+        
     </center>
 
 </BorderPane>

@@ -1,3 +1,10 @@
+/*
+* Controls the main application window and manages its core functionality.
+* Manages saved database connections, connection states, and connection workers.
+* Handles main menu actions and coordinates the display and updating of other
+* application views.
+*/
+
 package UI;
 
 import java.util.List;
@@ -22,14 +29,9 @@ import Database.ConnectionWorker;
 
 public class MainController {
 
-	@FXML
-	private ListView<ConnectionConfig> connectionList;
-	
-	@FXML
-	private Label statusLabel;	
-	
-	@FXML
-	private BorderPane mainPane;
+	@FXML private ListView<ConnectionConfig> connectionList;
+	@FXML private Label statusLabel;
+	@FXML private BorderPane mainPane;
 	
 	private final DBConnection db = new DBConnection();
 	private final ConnectionManager manager = new ConnectionManager();
@@ -38,41 +40,31 @@ public class MainController {
 	
 	@FXML
 	public void initialize() {
-
 	    List<ConnectionConfig> loaded = ConnectionStorage.load();
 	    manager.setSessions(loaded);
 
-	    connectionList.getSelectionModel().selectedItemProperty()
-	    .addListener((obs, oldValue, newValue) -> {
+	    connectionList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 	        if(newValue != null) {
-
 	            manager.setActive(newValue);
-
 	            updateStatus();
 
-	            if(sqlController != null){
-	                sqlController.refreshTree();
-	            }
-	            if(dashboardController != null) {
-	            	dashboardController.refreshDashboard();
-	            }
-	        }});
+	            if(sqlController != null) sqlController.refreshTree();
+	            if(dashboardController != null) dashboardController.refreshDashboard();
+	        }
+	    });
 
 	    updateList();
 	    updateStatus();
 	}
 	@FXML
 	public void showDashboard(){
-
 	    try {
 	    	FXMLLoader loader =new FXMLLoader(getClass().getResource("/dashboard.fxml"));
 	    	Parent root = loader.load();
 	    	
 	    	dashboardController = loader.getController();
 	    	dashboardController.setManager(manager);
-	    	
 	        mainPane.setCenter(root);
-	        
 	        dashboardController.refreshDashboard();
 
 	    } catch(Exception e){
@@ -82,14 +74,13 @@ public class MainController {
 	
 	@FXML
 	public void showSQL(){
-
 	    try {
-	    	FXMLLoader loader =
-	    	        new FXMLLoader(getClass().getResource("/sql.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/sql.fxml"));
 	    	Parent root = loader.load();
 	    	
 	    	sqlController = loader.getController();
 	    	sqlController.setManager(manager);
+	    	sqlController.refreshTree();
 	    	mainPane.setCenter(root);
 
 	    } catch(Exception e){
@@ -105,24 +96,18 @@ public class MainController {
 
 	    try {
 	    	Connection conn = db.connect( config.getHost(),config.getPort(),config.getDatabase(),config.getUser(),config.getPassword());
-
+	    	
 	    	config.setConnection(conn);
-	       ConnectionWorker worker = new ConnectionWorker(config, conn);
+	        ConnectionWorker worker = new ConnectionWorker(config, conn);
+	        config.setWorker(worker);
 	       
-	       config.setWorker(worker);
-	       
-	       worker.start();
+	        worker.start();
 
-	       if(sqlController != null){
-	    	    sqlController.refreshTree();
-	    	}
-	       if(dashboardController != null){
-	    	    dashboardController.refreshDashboard();
-	    	}
-	       
+	        if(sqlController != null) sqlController.refreshTree();
+	        if(dashboardController != null) dashboardController.refreshDashboard();
+	    	
 	        updateList();
 	        updateStatus();
-
 	        saveState();
 
 	    } catch (Exception e) {
@@ -135,7 +120,7 @@ public class MainController {
 		try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/History.fxml"));
 	        Parent root = loader.load();
-
+	        
 	        Stage stage = new Stage();
 	        stage.setTitle("History");
 
@@ -169,6 +154,8 @@ public class MainController {
 	        e.printStackTrace();
 	    }
 
+	    if(sqlController != null) sqlController.refreshTree();
+	    
 	    updateList();
 	    updateStatus();
 	}
@@ -237,30 +224,23 @@ public class MainController {
 	}
 	
 	public void addConnection(ConnectionConfig config) {
-
 	    manager.addSession(config);
 	    updateList();
-
+	    
 	    connectionList.getSelectionModel().select(config);
-
+	    
 	    updateStatus();
-
 	    saveState();
 	}
 
 	private void updateStatus() {
 	    ConnectionConfig session = manager.getActive();
-
+	    
 	    if (session == null) {
 	        statusLabel.setText("Disconnected");
 	        return;
 	    }
-
-	    statusLabel.setText(
-	        session.getName() +
-	        " | " +
-	        (session.getConnection() != null ? "ONLINE" : "OFFLINE")
-	    );
+	    statusLabel.setText(session.getName() + " | " +(session.getConnection() != null ? "ONLINE" : "OFFLINE"));
 	}
 	
 	private void updateList() {

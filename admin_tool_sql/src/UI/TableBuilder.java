@@ -1,3 +1,9 @@
+/*
+* Provides helper methods for displaying query results in the SQL view.
+* Builds table columns and rows from a ResultSet or displays a message
+* when a query does not return a result set.
+*/
+
 package UI;
 
 import java.sql.ResultSet;
@@ -12,7 +18,6 @@ import javafx.scene.control.TableView;
 public class TableBuilder {
 
     public static void show(TableView<ObservableList<String>> tableView, ResultSet rs) throws Exception {
-    	
         tableView.getColumns().clear();
         tableView.getItems().clear();
 
@@ -21,24 +26,24 @@ public class TableBuilder {
 
         for (int i = 1; i <= columnCount; i++) {
             final int columnIndex = i - 1;
+            
             TableColumn<ObservableList<String>, String> column = new TableColumn<>(meta.getColumnName(i));
-
             column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(columnIndex)));
-
             tableView.getColumns().add(column);
         }
-        
+       
         ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-
+        
         while (rs.next()) {
             ObservableList<String> row = FXCollections.observableArrayList();
+            
             for (int i = 1; i <= columnCount; i++) {
                 String value = rs.getString(i);
-                if (value == null)
-                    value = "NULL";
+                
+                if (value == null) value = "NULL";
+                
                 row.add(value);
             }
-
             data.add(row);
         }
         tableView.setItems(data);
@@ -55,7 +60,7 @@ public class TableBuilder {
     	table.getColumns().add(column);
     	
     	ObservableList<String> row = FXCollections.observableArrayList();
-    	
+
     	row.add(message);
     	
     	table.getItems().add(row);

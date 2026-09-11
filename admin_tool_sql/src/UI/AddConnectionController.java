@@ -1,7 +1,13 @@
+ /*
+ * Handles the add/edit connection dialog, including saving, cancelling,
+ * and populating fields when editing an existing connection.
+ */
+
 package UI;
 
 import Database.ConnectionConfig;
 import Database.DBConnection;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -19,9 +25,7 @@ public class AddConnectionController {
     @FXML private PasswordField passwordField;
 
     private MainController mainController;
-
     private final DBConnection dbConnection = new DBConnection();
-    
     private ConnectionConfig editingConfig = null;
 
     public void setMainController(MainController mainController) {
@@ -39,28 +43,21 @@ public class AddConnectionController {
             String pass = passwordField.getText();
 
             if (editingConfig != null) {
-
                 editingConfig.setName(name);
                 editingConfig.setHost(host);
                 editingConfig.setPort(port);
                 editingConfig.setDatabase(db);
                 editingConfig.setUser(user);
                 editingConfig.setPassword(pass);
-
-                mainController.refreshList(); // patrz niżej
-
-            } else {
-
+                mainController.refreshList();
+            }
+            else {
                 Connection conn = dbConnection.connect(host, port, db, user, pass);
-
-                ConnectionConfig config = new ConnectionConfig(
-                        name, host, port, db, user, pass
-                );
+                ConnectionConfig config = new ConnectionConfig(name, host, port, db, user, pass);
 
                 config.setConnection(conn);
                 mainController.addConnection(config);
             }
-
             close();
 
         } catch (Exception e) {
@@ -78,9 +75,9 @@ public class AddConnectionController {
         stage.close();
     }
     
-    public void setEditMode(ConnectionConfig config) {  	
+    public void setEditMode(ConnectionConfig config) {  
+    	
         this.editingConfig = config;
-
         nameField.setText(config.getName());
         hostField.setText(config.getHost());
         portField.setText(String.valueOf(config.getPort()));
