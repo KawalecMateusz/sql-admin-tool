@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+    Defines the layout of the dialog window used to add or edit a database connection.
+-->
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -34,4 +38,5 @@
         <Button text="Save" onAction="#onSave" styleClass="btnSave"/>
         <Button text="Cancel" onAction="#onCancel"/>
     </HBox>
+    
 </VBox>

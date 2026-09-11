@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+    Defines the layout of the query history window, including filters for connection name, query type, and date.
+-->
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -8,30 +12,36 @@
             fx:controller="UI.HistoryController">
 
     <top>
+    
         <VBox styleClass="historyTop">
             <Label text="Query History" styleClass="historyTitle"/>
+            
             <HBox styleClass="HBoxHistory">
                 <Label text="Database:"/>
                 <TextField fx:id="databaseField" prefWidth="150"/>
                 <Label text="Type:"/>
                 <ComboBox fx:id="typeBox" prefWidth="120"/>
             </HBox>
+            
             <HBox styleClass="HBoxHistory">
                 <Label text="From:"/>
                 <DatePicker fx:id="fromDate"/>
                 <Label text="To:"/>
                 <DatePicker fx:id="toDate"/>
             </HBox>
+            
             <HBox styleClass="HBoxHistory">
                 <Button text="Search" onAction="#onFilter" styleClass="btnAccent"/>
                 <Button text="Clear filters" onAction="#onClear"/>
                 <Button text="Refresh" onAction="#onRefresh"/>
             </HBox>
         </VBox>
+        
     </top>
 
     <center>
         <TableView fx:id="historyTable">
+        
             <columns>
                 <TableColumn styleClass="historyCol" fx:id="nameColumn" text="Connection"/>
                 <TableColumn styleClass="historyCol" fx:id="databaseColumn" text="Database"/>
@@ -39,6 +49,7 @@
                 <TableColumn styleClass="historyCol" fx:id="dateColumn" text="Date"/>
                 <TableColumn styleClass="historyCol" fx:id="sqlColumn" text="SQL"/>
             </columns>
+            
         </TableView>
     </center>
 

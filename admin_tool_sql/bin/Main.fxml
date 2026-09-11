@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+    Defines the layout of the main window, including the top bar and the connection list.
+-->
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -9,6 +13,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="UI.MainController">
     <top>
+    
         <HBox styleClass="topBar">
             <Button text="Connect" onAction="#onConnect"/>
             <Button text="Disconnect" onAction="#onDisconnect"/>
@@ -16,23 +21,28 @@
             <Button text="SQL" onAction="#showSQL"/>
             <Button text="History" onAction="#onHistory"/>
         </HBox>
+        
     </top>
 
     <left>
+    
         <VBox styleClass="leftList">
             <Label fx:id="connLabel" text="Connections"/>
+            
             <ListView fx:id="connectionList" VBox.vgrow="ALWAYS"/>
+            
             <HBox styleClass="addOption">
                 <Button text="+" onAction="#onAdd"/>
                 <Button text="-" onAction="#onRemove"/>
                 <Button text="Edit" onAction="#onEdit"/>
             </HBox>
+            
             <Label fx:id="statusLabel" text="Disconnected"/>
         </VBox>
+        
     </left>
 
     <center>
-
     </center>
 
     <bottom>

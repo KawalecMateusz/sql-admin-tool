@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+    Defines the layout of the dashboard panel used to monitor basic database statistics and connections.
+-->
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.chart.*?>
@@ -9,14 +13,16 @@
             fx:controller="UI.DashboardController">
             
     <center>
+    
         <ScrollPane fitToWidth="true">
             <VBox styleClass="dashContainer">
-                
+       
                 <HBox spacing="15">
 
                     <VBox styleClass="dashCard" prefWidth="380">
                         <Label text="Server information" styleClass="cardHeader"/>
-                        <Separator/>
+                        
+                       	<Separator/>
                         <GridPane hgap="15" vgap="8">
                             <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="lblDim"/>
                             <Label fx:id="name" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="textAccent"/>
@@ -36,36 +42,43 @@
                             <Label text="Uptime:" GridPane.rowIndex="2" GridPane.columnIndex="2" styleClass="lblDim"/>
                             <Label fx:id="uptime" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
                         </GridPane>
+                        
                     </VBox>
 
-
                     <TilePane hgap="12" vgap="12" prefColumns="3" HBox.hgrow="ALWAYS">
+                    
                         <VBox styleClass="kpiCard">
                             <Label text="Active Connections" styleClass="kpiLabel"/>
                             <Label fx:id="connectionActive" styleClass="kpiValue, textAccent"/>
                         </VBox>
+                        
                         <VBox styleClass="kpiCard">
                             <Label text="Idle Connections" styleClass="kpiLabel"/>
                             <Label fx:id="connectionIdle" styleClass="kpiValue"/>
                         </VBox>
+                        
                         <VBox styleClass="kpiCard">
                             <Label text="Latency" styleClass="kpiLabel"/>
                             <Label fx:id="latency" styleClass="kpiValue"/>
                         </VBox>
+                        
                         <VBox styleClass="kpiCard">
                             <Label text="Cache Hit" styleClass="kpiLabel"/>
                             <Label fx:id="cache" styleClass="kpiValue"/>
                         </VBox>
+                        
                         <VBox styleClass="kpiCard">
                             <Label text="Deadlocks" styleClass="kpiLabel"/>
                             <Label fx:id="deadlock" styleClass="kpiValue"/>
                         </VBox>
                     </TilePane>
+                    
                 </HBox>
 
                 <HBox spacing="15">
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label text="Active connections" styleClass="cardHeader"/>
+                        
                         <TableView fx:id="activeConnections" prefHeight="200">
                             <columns>
                                 <TableColumn fx:id="pidColumn" text="PID"/>
@@ -75,16 +88,19 @@
                                 <TableColumn fx:id="stateColumn" text="State"/>
                             </columns>
                         </TableView>
+                        
                     </VBox>
                 
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label text="Tables size" styleClass="cardHeader"/>
+                        
                         <TableView fx:id="tablesSize" prefHeight="200">
                             <columns>
                                 <TableColumn fx:id="tableNameColumn" text="Table"/>
                                 <TableColumn fx:id="tableSizeColumn" text="Size"/>
                             </columns>
                         </TableView>
+                        
                     </VBox>
                 </HBox>
 
@@ -99,6 +115,7 @@
 
                 <Label text="Rows Returned/sec" styleClass="cardHeader"/>
                 <LineChart fx:id="rowsReturnedChart"><xAxis><CategoryAxis/></xAxis><yAxis><NumberAxis/></yAxis></LineChart>
+            
             </VBox>
         </ScrollPane>
     </center>

@@ -301,7 +301,7 @@
     -fx-background-color: #9D7CD8, #73DACA;
 }
 
-//*=== ADD CONNECTION DIALOG ===*/
+/*=== ADD CONNECTION DIALOG ===*/
 .dialogAdd {
     -fx-background-color: #1E1E2E;
     -fx-padding: 20px;
