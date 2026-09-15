@@ -1,3 +1,7 @@
+/*
+ * Loads information about active database connections and stores it in objects.
+ */
+
 package Dashboard;
 
 import java.sql.Connection;
@@ -13,10 +17,10 @@ public class ActiveConnectionLoader {
 	    List<ActiveConnectionInfo> connections = new ArrayList<>();
 
 	    try {
-
 	        Statement stmt = connection.createStatement();
 
-	        ResultSet rs = stmt.executeQuery("SELECT pid, usename, datname, client_addr, state, application_name FROM pg_stat_activity WHERE datname IS NOT NULL ORDER BY pid");
+	        ResultSet rs = stmt.executeQuery("SELECT pid, usename, datname, client_addr, state, application_name"
+	        		+ " FROM pg_stat_activity WHERE datname IS NOT NULL ORDER BY pid");
 
 
 	        while(rs.next()) {
@@ -29,19 +33,23 @@ public class ActiveConnectionLoader {
 	            info.setClient(rs.getString("client_addr"));
 	            info.setState(rs.getString("state"));
 	            info.setApplication(rs.getString("application_name"));
-	            String client = rs.getString(6);
+	            
+	            String client = rs.getString("client_addr");
 	            if(client == null)
 	                client = "local";
-	            info.setClient(client);
 	            
+	            info.setClient(client);
+	            info.setState(rs.getString("state"));
+	            info.setApplication(rs.getString("application_name"));
 	            connections.add(info);
+	            
 	        }
-
+            rs.close();
+            stmt.close();
 	    }
 	    catch(Exception e) {
 	        e.printStackTrace();
 	    }
-
 	    return connections;
 	}
 }

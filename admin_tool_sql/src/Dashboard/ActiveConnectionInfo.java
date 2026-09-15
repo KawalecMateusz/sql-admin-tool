@@ -1,3 +1,7 @@
+/*
+ * Stores information about an active database connection.
+ */
+
 package Dashboard;
 
 public class ActiveConnectionInfo {
@@ -8,7 +12,6 @@ public class ActiveConnectionInfo {
     private String state;
     private String application;
     private String client;
-
 
     public int getPid() {
         return pid;
@@ -45,7 +48,6 @@ public class ActiveConnectionInfo {
         this.state = state;
     }
 
-
     public String getApplication() {
         return application;
     }
@@ -53,7 +55,6 @@ public class ActiveConnectionInfo {
     public void setApplication(String application) {
         this.application = application;
     }
-
 
     public String getClient() {
         return client;

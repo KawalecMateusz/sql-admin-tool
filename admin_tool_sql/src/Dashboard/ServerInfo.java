@@ -1,3 +1,7 @@
+/*
+ * Stores information about the database server.
+ */
+
 package Dashboard;
 
 public class ServerInfo {
@@ -44,21 +48,17 @@ public class ServerInfo {
 	
 	public String getVersion() {
         return version;
-
     }
 
     public void setVersion(String version) {
         this.version = version;
-
     }
 
     public String getUptime() {
         return uptime;
-
     }
 
     public void setUptime(String uptime) {
         this.uptime = uptime;
-
     }
 }

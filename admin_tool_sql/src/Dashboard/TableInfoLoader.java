@@ -1,3 +1,7 @@
+/*
+ * Loads information about database tables for the dashboard.
+ */
+
 package Dashboard;
 
 import java.sql.Connection;
@@ -14,15 +18,18 @@ public class TableInfoLoader {
 	    
 	    try {
 	        Statement stmt = connection.createStatement();
-	        ResultSet rs = stmt.executeQuery("SELECT relname, pg_size_pretty(pg_total_relation_size(relid)) FROM pg_catalog.pg_statio_user_tables ORDER BY pg_total_relation_size(relid) DESC");
+	        ResultSet rs = stmt.executeQuery("SELECT relname, pg_size_pretty(pg_total_relation_size(relid))"
+	        		+ " FROM pg_catalog.pg_statio_user_tables ORDER BY pg_total_relation_size(relid) DESC");
 
 	        while(rs.next()) {
 	            TableInfo table = new TableInfo();
 
 	            table.setName(rs.getString(1));
 	            table.setSize(rs.getString(2));
-	            tables.add(table);
+	            tables.add(table);	          
 	        }
+            rs.close();
+            stmt.close();
 	    }
 	    catch(Exception e) {
 	        e.printStackTrace();

@@ -1,3 +1,7 @@
+/*
+ * Stores a single set of data used by the dashboard charts.
+ */
+
 package Dashboard;
 
 public class DashboardSample {

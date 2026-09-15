@@ -109,9 +109,7 @@ public class DashboardController {
 	        clearDashboard();
 	        return;
 	    }
-	    
-	    if(config.getConnection() == null) return;
-	    
+
 	    try{
 	        ServerInfo info = loader.load(config);
 	        DashboardStats stats = collector.collect(config.getConnection());

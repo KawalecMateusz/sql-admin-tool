@@ -1,3 +1,7 @@
+/*
+ * Collects statistics from the database and stores them in an object.
+ */
+
 package Dashboard;
 
 import java.sql.Connection;
@@ -25,12 +29,12 @@ public class StatsCollector {
                 stats.setConnectionsIdle(rs.getInt(1));
             }
 
-            rs = stmt.executeQuery("SELECT round((sum(blks_hit) * 100.0) /(sum(blks_hit)+sum(blks_read)),2)FROM pg_stat_database");
+            rs = stmt.executeQuery("SELECT round((sum(blks_hit) * 100.0) /(sum(blks_hit)+sum(blks_read)),2) FROM pg_stat_database");
             if(rs.next()) {
                 stats.setCacheHit(rs.getDouble(1));
             }
 
-            rs = stmt.executeQuery("SELECT sum(deadlocks)FROM pg_stat_database");
+            rs = stmt.executeQuery("SELECT sum(deadlocks) FROM pg_stat_database");
             if(rs.next()) {
                 stats.setDeadlocks(rs.getInt(1));
             }
@@ -39,6 +43,9 @@ public class StatsCollector {
             stmt.execute("SELECT 1");
             long end = System.currentTimeMillis();
             stats.setLatency(end-start);
+            
+            rs.close();
+            stmt.close();
 
         }
         catch(Exception e) {

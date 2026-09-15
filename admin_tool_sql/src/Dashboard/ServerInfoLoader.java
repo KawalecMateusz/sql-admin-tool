@@ -1,3 +1,7 @@
+/*
+ * Loads information about the database server.
+ */
+
 package Dashboard;
 
 import java.sql.Connection;
@@ -19,17 +23,19 @@ public class ServerInfoLoader {
 		info.setDatabase(config.getDatabase());
 		
 		Statement stmt = conn.createStatement();
-		
 		ResultSet rs = stmt.executeQuery("SELECT version()");
+		
 		if(rs.next()) {
 			info.setVersion(rs.getString(1));
 		}
 		rs.close();
 		
 		rs = stmt.executeQuery("SELECT now() - pg_postmaster_start_time();");
+		
 		if(rs.next()) {
 			info.setUptime(rs.getString(1));
 		}
+		
 		rs.close();
 		stmt.close();
 		

@@ -1,3 +1,7 @@
+/*
+ * Stores basic information about a table displayed in the dashboard.
+ */
+
 package Dashboard;
 
 public class TableInfo {

@@ -1,12 +1,16 @@
+/*
+ * Stores statistics used by the dashboard.
+ */
+
 package Dashboard;
 
 public class DashboardStats {
 	
-	public int connectionsActive;
-	public int connectionsIdle;
-    public double cacheHit;
-    public int deadlocks;
-    public long latency;
+	private int connectionsActive;
+	private int connectionsIdle;
+	private double cacheHit;
+	private int deadlocks;
+	private long latency;
     
     public int getConnectionsActive() {
         return connectionsActive;

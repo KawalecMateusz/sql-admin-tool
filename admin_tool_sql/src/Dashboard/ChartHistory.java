@@ -1,3 +1,8 @@
+/*
+ * Stores dashboard chart data and limits the history to a fixed number of points.
+ */
+
+
 package Dashboard;
 
 import java.util.LinkedList;
