@@ -1,3 +1,7 @@
+/*
+ * Manages database connection sessions and the currently active connection.
+ */
+
 package Database;
 
 import java.util.ArrayList;

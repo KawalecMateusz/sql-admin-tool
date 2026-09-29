@@ -1,3 +1,7 @@
+/*
+ * Starts the application and initializes the main JavaFX window.
+ */
+
 package Main;
 
 import javafx.application.Application;

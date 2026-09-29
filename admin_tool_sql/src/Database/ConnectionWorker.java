@@ -1,3 +1,7 @@
+/*
+ * Runs database queries for a connection using a dedicated worker thread.
+ */
+
 package Database;
 
 import java.sql.Connection;
@@ -11,22 +15,16 @@ public class ConnectionWorker extends Thread {
 
     private Connection connection;
     private boolean running = true;
-
-    private ConnectionConfig config;
-    
     private BlockingQueue<SQLTask> sqlQueue = new LinkedBlockingQueue<>();
 
     public ConnectionWorker(ConnectionConfig config, Connection connection) {
-        this.config = config;
         this.connection = connection;
         setName("DB-Worker-" + config.getName());
     }
 
-
     public Connection getConnection() {
         return connection;
     }
-
 
     public boolean isConnected() {
         return connection != null;
@@ -35,41 +33,32 @@ public class ConnectionWorker extends Thread {
 
     @Override
     public void run() {
-
         while(running) {
-
             try {
-
                 SQLTask task = sqlQueue.take();
                 Statement stmt = connection.createStatement();
                 boolean result = stmt.execute(task.getsql());
-
-               QueryResult queryresult;
+                QueryResult queryresult;
                
-               if(result) {
-            	   ResultSet rs = stmt.getResultSet();
-            	   
-            	   queryresult = new QueryResult(true, rs, null);  
-            	   }
-               else {
-            	   int count = stmt.getUpdateCount();
-            	   
-            	   queryresult = new QueryResult(false, null, "Rows affected: "+count);
-               }
-               
-               task.complete(queryresult);
+                if(result) {
+                	ResultSet rs = stmt.getResultSet();         	   
+            	    queryresult = new QueryResult(true, rs, null);  
+            	    }
+                else {
+            	    int count = stmt.getUpdateCount();	   
+            	    queryresult = new QueryResult(false, null, "Rows affected: "+count);
+                }
+                task.complete(queryresult);
                
             } catch(Exception e) {
-                e.printStackTrace();
+            	e.printStackTrace();
             }
         }
     }
 
 
     public void stopWorker() {
-
         running = false;
-
         try {
         	interrupt();
         } catch(Exception e) {
@@ -78,8 +67,6 @@ public class ConnectionWorker extends Thread {
     }
     
     public void executeSQL(SQLTask task) {
-
         sqlQueue.add(task);
-
     }
 }

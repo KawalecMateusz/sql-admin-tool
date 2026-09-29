@@ -1,3 +1,7 @@
+/*
+ * Stores data used by an item in the database tree.
+ */
+
 package Database;
 
 public class DatabaseTreeItem {

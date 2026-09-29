@@ -1,3 +1,7 @@
+/*
+ * Handles loading and saving the query history.
+ */
+
 package Database;
 
 import java.io.*;
@@ -6,12 +10,12 @@ import java.util.List;
 
 public class QueryHistoryManager {
 
-	private static final String File = "query_history.dat";
+	private static final String FILE = "query_history.dat";
 	
 	public static void save(List<QueryHistory> history) {
 		try(ObjectOutputStream out = 
 				new ObjectOutputStream(
-						new FileOutputStream(File))){
+						new FileOutputStream(FILE))){
 			out.writeObject(history);
 		}
 		catch(Exception e) {
@@ -20,11 +24,12 @@ public class QueryHistoryManager {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<QueryHistory> load(){
 		
 		try(ObjectInputStream in = 
 				new ObjectInputStream(
-						new FileInputStream(File))){
+						new FileInputStream(FILE))){
 			return (List<QueryHistory>) in.readObject();
 		}
 		catch(Exception e) {

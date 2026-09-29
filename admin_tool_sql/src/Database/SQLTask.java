@@ -1,3 +1,7 @@
+/*
+ * Represents a SQL task executed asynchronously by the database worker.
+ */
+
 package Database;
 
 import java.util.function.Consumer;

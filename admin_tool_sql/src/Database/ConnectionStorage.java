@@ -1,3 +1,7 @@
+/*
+ * Handles saving and loading the database connection list.
+ */
+
 package Database;
 
 import java.io.*;

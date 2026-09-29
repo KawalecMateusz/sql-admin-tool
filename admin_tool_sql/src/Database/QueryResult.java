@@ -1,3 +1,7 @@
+/*
+ * Stores the result of an executed SQL query.
+ */
+
 package Database;
 
 import java.sql.ResultSet;

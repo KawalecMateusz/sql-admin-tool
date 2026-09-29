@@ -1,3 +1,7 @@
+/*
+ * Stores information about an executed SQL query for the query history.
+ */
+
 package Database;
 
 import java.io.Serializable;

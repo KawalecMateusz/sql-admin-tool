@@ -1,3 +1,7 @@
+/*
+ * Stores database connection settings and the current connection state.
+ */
+
 package Database;
 
 import java.io.Serializable;
@@ -6,7 +10,6 @@ import java.sql.Connection;
 public class ConnectionConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private String name;
     private String host;
     private int port;

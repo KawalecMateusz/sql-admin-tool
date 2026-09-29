@@ -1,3 +1,7 @@
+/*
+ * Handles connecting to and disconnecting from a database.
+ */
+
 package Database;
 
 import java.sql.Connection;

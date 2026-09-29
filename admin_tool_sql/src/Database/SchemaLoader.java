@@ -1,3 +1,7 @@
+/*
+ * Loads the database schema and builds the tree hierarchy for the SQL view.
+ */
+
 package Database;
 
 import java.sql.Connection;
@@ -7,11 +11,10 @@ public class SchemaLoader {
 	
 	public static TreeItem<DatabaseTreeItem> load(Connection conn,
             String databaseName) {
-
+		
 		TreeItem<DatabaseTreeItem> root = new TreeItem<>( new DatabaseTreeItem(
 						NodeType.DATABASE,
 						databaseName));
-
 		TreeItem<DatabaseTreeItem> tablesFolder = new TreeItem<>( new DatabaseTreeItem(
 						NodeType.FOLDER,
 						"Tables"));
@@ -29,22 +32,20 @@ public class SchemaLoader {
 		    var rs = stmt.executeQuery(sql);
 
 		    while(rs.next()) {
-
 		        String tableName = rs.getString("table_name");
-
 		        TreeItem<DatabaseTreeItem> tableItem = new TreeItem<>(
 		                        new DatabaseTreeItem(
 		                                NodeType.TABLE,
 		                                tableName));
-
-		        tablesFolder.getChildren().add(tableItem);}
+		        tablesFolder.getChildren().add(tableItem);
+		        }
+		    rs.close();
+		    stmt.close();
 		}
 		catch(Exception e) {
 		    e.printStackTrace();
 		}
-		
 		root.getChildren().add(tablesFolder);
-
 		return root;
 	}
 }
