@@ -45,12 +45,12 @@ public class SQLController {
                     javafx.application.Platform.runLater(()->{
                         try {
                             if(result.hasTable){TableBuilder.show(
-                                    tableView, result.resultSet);
+                                    tableView, result);
                             		tableView.getColumns().forEach(col->col.setPrefWidth(80));
                             }
                             else {
                                 TableBuilder.showMessage(
-                                    tableView, result.message);
+                                    tableView, result);
                             }
                         }
                         catch(Exception e){
