@@ -95,7 +95,7 @@ Note: The screenshots and demo were recorded using local test databases. Additio
 
 ## Demo
 
-[Watch demo](docs/video/Demo.mp4)
+[Watch demo](https://youtu.be/VygNzCf2_hM)
 
 ## Development Notes
 
