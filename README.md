@@ -73,6 +73,28 @@ Closing a connection terminates its associated worker thread and releases the da
 
 No additional configuration is required beyond a running PostgreSQL database and valid connection credentials.
 
+## Screenshots
+
+### SQL Editor
+
+![SQL Editor - SELECT query](docs/images/Select_query.png)
+
+### Dashboard
+
+![Dashboard](docs/images/Dashboard.png)
+
+### Connection Management
+
+![Edit connection](docs/images/Edit_diagram.png)
+
+### Query History
+
+![Query history](docs/images/History_window.png)
+
+## Demo
+
+[Watch demo](docs/video/demo.mp4)
+
 ## Development Notes
 
 ### AI Usage
