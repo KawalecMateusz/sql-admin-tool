@@ -128,6 +128,8 @@ public class MainController {
 	        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
 	        stage.setScene(scene);
+	        stage.setWidth(1200);
+	        stage.setHeight(800);
 	        stage.show();
 
 	    } catch (Exception e) {

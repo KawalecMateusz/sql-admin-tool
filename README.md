@@ -75,6 +75,8 @@ No additional configuration is required beyond a running PostgreSQL database and
 
 ## Screenshots
 
+Note: The screenshots and demo were recorded using local test databases. Additional background queries were generated to demonstrate the application’s monitoring and real-time statistics features.
+
 ### SQL Editor
 
 ![SQL Editor - SELECT query](docs/images/Select_query.png)
